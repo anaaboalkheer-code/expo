@@ -1,261 +1,1041 @@
----
-title: Create your first app
-description: In this chapter, learn how to create a new Expo project.
-hasVideoLink: true
----
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>حروفي الصغيرة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFF7E8; --card:#FFFFFF; --ink:#2D3142; --ink-soft:#6B7280;
+    --blue:#2EC4F1; --blue-deep:#0E86D4; --yellow:#FFC93C; --coral:#FF5D8F;
+    --green:#2ED191; --purple:#9B6BFF; --orange:#FF9A3D;
+    --guide:#D8CFBB; --line-strong:#B9AF97; --future:#E7E0D0;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){ --bg:#1E1B2E; --card:#2A2640; --ink:#F5F1FF; --ink-soft:#B9B3D6; --guide:#4A4568; --line-strong:#5C5680; --future:#3A3557; }
+  }
+  :root[data-theme="dark"]{ --bg:#1E1B2E; --card:#2A2640; --ink:#F5F1FF; --ink-soft:#B9B3D6; --guide:#4A4568; --line-strong:#5C5680; --future:#3A3557; }
+  html{ scroll-padding-top: env(safe-area-inset-top, 0px); height:100%; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; min-height:100%;
+    background: linear-gradient(160deg, #FFF6D6 0%, #FFE3F0 45%, #E0F4FF 100%);
+    color:var(--ink); font-family:"Tajawal",sans-serif;
+    display:flex; justify-content:center; -webkit-tap-highlight-color:transparent; overscroll-behavior-y:contain; }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) body{ background: linear-gradient(160deg, #241F3D 0%, #2B2140 50%, #1B2A3D 100%); }
+  }
+  :root[data-theme="dark"] body{ background: linear-gradient(160deg, #241F3D 0%, #2B2140 50%, #1B2A3D 100%); }
+  .app{ width:100%; max-width:480px; padding:16px 14px 26px; display:flex; flex-direction:column; gap:12px; }
 
-import { Download03Icon } from '@expo/styleguide-icons/outline/Download03Icon';
+  .top{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .brand h1{ font-family:"Fredoka",sans-serif; font-size:20px; margin:0; font-weight:700;
+    background: linear-gradient(90deg, var(--coral), var(--purple), var(--blue-deep));
+    -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .brand p{ margin:2px 0 0; font-size:12.5px; color:var(--ink-soft); }
+  .stars{ display:flex; align-items:center; gap:6px; background:linear-gradient(135deg,#FFE29A,#FFC93C); padding:7px 13px; border-radius:999px;
+    box-shadow:0 3px 10px rgba(255,180,50,0.35); font-family:"Fredoka",sans-serif; font-weight:700; color:#7A4A00; font-size:14px; white-space:nowrap; }
 
-import { BoxLink } from '~/ui/components/BoxLink';
-import { Collapsible } from '~/ui/components/Collapsible';
-import { ContentSpotlight } from '~/ui/components/ContentSpotlight';
-import { Prerequisites, Requirement } from '~/ui/components/Prerequisites';
-import { ProgressTracker } from '~/ui/components/ProgressTracker';
-import { Terminal } from '~/ui/components/Snippet';
-import { Step } from '~/ui/components/Step';
-import { CODE } from '~/ui/components/Text';
-import { VideoBoxLink } from '~/ui/components/VideoBoxLink';
+  .modes{ display:flex; background:var(--card); border-radius:14px; padding:4px; gap:4px; box-shadow:0 2px 10px rgba(0,0,0,0.05); }
+  .modes button{ flex:1; border:none; background:transparent; padding:9px 6px; border-radius:10px; font-family:"Fredoka",sans-serif;
+    font-weight:600; font-size:13.5px; color:var(--ink-soft); cursor:pointer; }
+  .modes button.active{ background:linear-gradient(135deg, var(--blue), var(--purple)); color:#fff; box-shadow:0 3px 10px rgba(155,107,255,0.35); }
 
-In this chapter, let's learn how to create a new Expo project and how to get it running.
+  .glossary{ display:flex; gap:6px; overflow-x:auto; padding:2px 2px 2px; scrollbar-width:none; }
+  .glossary::-webkit-scrollbar{ display:none; }
+  .gchip{ flex-shrink:0; display:flex; align-items:center; gap:4px; border-radius:999px; padding:5px 10px;
+    font-family:"Fredoka",sans-serif; font-size:11.5px; font-weight:600; color:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.1); white-space:nowrap; }
+  .gchip b{ color:#fff; font-weight:800; }
+  .gchip:nth-child(1){ background:linear-gradient(135deg,#FF7EA6,#FF5D8F); }
+  .gchip:nth-child(2){ background:linear-gradient(135deg,#54D3FF,#2EC4F1); }
+  .gchip:nth-child(3){ background:linear-gradient(135deg,#FFD166,#FF9A3D); }
+  .gchip:nth-child(4){ background:linear-gradient(135deg,#B794FF,#9B6BFF); }
+  .gchip:nth-child(5){ background:linear-gradient(135deg,#6FE3B4,#2ED191); }
+  .gchip:nth-child(6){ background:linear-gradient(135deg,#FFA9C9,#FF5D8F); }
+  .gchip:nth-child(7){ background:linear-gradient(135deg,#8FD9FF,#0E86D4); }
 
-<VideoBoxLink
-  videoId="m1-bc53EGh8"
-  title="Watch: Creating your first universal Expo app"
-  description="Create a new Expo project from scratch and get it running on Android, iOS, and web."
-/>
+  .card{ background:var(--card); border-radius:24px; padding:14px; box-shadow:0 8px 24px rgba(155,107,255,0.14);
+    display:flex; flex-direction:column; align-items:center; gap:10px; border:2px solid #FFE8B0; }
+  .letter-name{ font-family:"Fredoka",sans-serif; font-size:14px; color:var(--ink-soft); text-align:center; }
+  .letter-name b{ color:var(--blue-deep); font-size:17px; }
 
----
+  .canvas-wrap{ position:relative; width:100%; max-width:300px; aspect-ratio: 4 / 5; border-radius:20px; overflow:hidden;
+    background:var(--bg); border:4px solid; border-image: linear-gradient(135deg, var(--coral), var(--yellow), var(--green), var(--blue), var(--purple)) 1; }
+  canvas{ position:absolute; inset:0; width:100%; height:100%; touch-action:none; }
+  #guideCanvas, #demoCanvas{ pointer-events:none; }
 
-<Prerequisites>
-  <Requirement title="Expo Go on a physical device">
-    Install [Expo Go](https://expo.dev/go) on a physical Android or iOS device. On a physical iOS
-    device, you also need a free [Expo account](https://expo.dev/signup) and must sign in to it in
-    both Expo CLI and Expo Go.
-  </Requirement>
-  <Requirement title="Node.js (LTS)">
-    Install [Node.js (LTS version)](https://nodejs.org/en) on your machine.
-  </Requirement>
-  <Requirement title="A code editor">
-    Install [VS Code](https://code.visualstudio.com/) or any other preferred code editor or IDE.
-  </Requirement>
-  <Requirement title="A developer machine with a terminal">
-    A macOS, Linux, or Windows (PowerShell and [WSL2](https://expo.fyi/wsl)) with a terminal window
-    open.
-  </Requirement>
-</Prerequisites>
+  .celebrate{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:"Fredoka",sans-serif;
+    font-size:16px; font-weight:700; color:#fff;
+    background:linear-gradient(135deg, rgba(255,93,143,0.93), rgba(155,107,255,0.93), rgba(46,196,241,0.93));
+    opacity:0; transform:scale(0.85);
+    transition:opacity .25s ease, transform .25s ease; pointer-events:none; text-align:center; padding:12px; flex-direction:column; gap:4px; }
+  .celebrate.show{ opacity:1; transform:scale(1); }
+  .celebrate span.emoji{ font-size:34px; }
 
-This tutorial assumes you are familiar with TypeScript and React. If you are not, check out the [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html) and [React's official tutorial](https://react.dev/learn).
+  .demo-toast{ position:absolute; bottom:8px; left:50%; transform:translateX(-50%); background:rgba(30,32,45,0.85); color:#fff;
+    font-family:"Fredoka",sans-serif; font-size:12.5px; padding:6px 12px; border-radius:999px; opacity:0; transition:opacity .2s ease; pointer-events:none; white-space:nowrap; }
+  .demo-toast.show{ opacity:1; }
 
-<Step label="1">
+  .say-bubble{ position:absolute; top:8px; left:50%; transform:translateX(-50%) scale(0.9); background:#fff; color:var(--blue-deep);
+    font-family:"Fredoka",sans-serif; font-weight:700; font-size:14px; padding:6px 14px; border-radius:999px; opacity:0;
+    transition:opacity .2s ease, transform .2s ease; pointer-events:none; white-space:nowrap; box-shadow:0 3px 10px rgba(0,0,0,0.15); }
+  .say-bubble.show{ opacity:1; transform:translateX(-50%) scale(1); }
 
-## Initialize a new Expo app
+  .row-buttons{ display:flex; gap:8px; width:100%; }
+  .row-buttons button{ flex:1; border:none; border-radius:14px; padding:11px 6px; font-family:"Fredoka",sans-serif; font-weight:600;
+    font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; }
+  .btn-demo{ background:linear-gradient(135deg,#FFD37A,#FF9A3D); color:#7A3B00; box-shadow:0 3px 8px rgba(255,154,61,0.35); }
+  .btn-clear{ background:linear-gradient(135deg,#FFB0C4,#FF5D8F); color:#7A0030; box-shadow:0 3px 8px rgba(255,93,143,0.3); }
+  .btn-hear{ background:linear-gradient(135deg,#8FE0FF,#2EC4F1); color:#00415C; box-shadow:0 3px 8px rgba(46,196,241,0.3); }
+  .row-buttons button:disabled{ opacity:0.5; box-shadow:none; }
 
-We'll use [`create-expo-app`](/more/create-expo/) to initialize a new Expo app. It is a command-line tool to create a new React Native project. Run the following command in your terminal:
+  .steps{ width:100%; background:var(--bg); border-radius:14px; padding:10px 12px; display:flex; flex-direction:column; gap:8px; }
+  .step{ display:flex; align-items:flex-start; gap:8px; font-size:12.8px; line-height:1.5; color:var(--ink-soft); }
+  .step .num{ flex-shrink:0; width:20px; height:20px; border-radius:50%; background:var(--future); color:var(--ink-soft);
+    display:flex; align-items:center; justify-content:center; font-family:"Fredoka",sans-serif; font-weight:700; font-size:11px; margin-top:1px; }
+  .step.active{ color:var(--ink); font-weight:500; }
+  .step.active .num{ background:linear-gradient(135deg,var(--coral),var(--purple)); color:#fff; }
+  .step.done .num{ background:var(--green); color:#fff; }
+  .step.done{ color: var(--ink-soft); }
+  .step .txt{ display:flex; flex-direction:column; gap:1px; }
+  .step .en{ font-family:"Fredoka",sans-serif; font-weight:700; font-size:13px; color:var(--purple); }
+  .step.active .en{ color:var(--coral); }
+  .step.done .en{ color:var(--green); text-decoration: line-through; text-decoration-thickness: 1.5px; }
+  .step .ar{ font-size:12px; }
 
-<Terminal
-  cmd={{
-    npm: [
-      '# Create a project named StickerSmash',
-      '$ npx create-expo-app@latest StickerSmash',
-      '',
-      '# CLI will prompt you to choose a template. Select SDK 57.',
-      '$ Select an Expo SDK version > SDK 57',
-      '',
-      '# Navigate to the project directory',
-      '$ cd StickerSmash',
-    ],
-    yarn: [
-      '# Create a project named StickerSmash',
-      '$ yarn create expo-app StickerSmash',
-      '',
-      '# CLI will prompt you to choose a template. Select SDK 57.',
-      '$ Select an Expo SDK version > SDK 57',
-      '',
-      '# Navigate to the project directory',
-      '$ cd StickerSmash',
-    ],
-    pnpm: [
-      '# Create a project named StickerSmash',
-      '$ pnpm create expo-app StickerSmash',
-      '',
-      '# CLI will prompt you to choose a template. Select SDK 57.',
-      '$ Select an Expo SDK version > SDK 57',
-      '',
-      '# Navigate to the project directory',
-      '$ cd StickerSmash',
-    ],
-    bun: [
-      '# Create a project named StickerSmash',
-      '$ bun create expo StickerSmash',
-      '',
-      '# CLI will prompt you to choose a template. Select SDK 57.',
-      '$ Select an Expo SDK version > SDK 57',
-      '',
-      '# Navigate to the project directory',
-      '$ cd StickerSmash',
-    ],
-  }}
-/>
+  .nav{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .nav-btn{ width:48px; height:48px; border-radius:50%; border:none; background:var(--card); box-shadow:0 3px 10px rgba(0,0,0,0.08);
+    font-size:18px; color:var(--blue-deep); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .nav-btn:disabled{ opacity:0.35; }
+  .big-next{ flex:1; height:48px; border-radius:16px; border:none; background:linear-gradient(135deg,var(--coral),var(--purple));
+    color:#fff; font-family:"Fredoka",sans-serif; font-weight:600; font-size:15px; cursor:pointer; box-shadow:0 4px 12px rgba(255,93,143,0.3); }
 
-This command will create a new project directory named StickerSmash, using the [default template](/more/create-expo/#--template). This template has essential boilerplate code and libraries needed to build our app, including Expo Router and allows us to test our app with Expo Go installed on our devices. We'll continue to add more libraries throughout this tutorial as needed.
+  .strip-label{ font-size:12.5px; color:var(--ink-soft); margin:2px 2px 0; }
+  .strip{ display:flex; gap:7px; overflow-x:auto; padding:4px 2px 6px; scrollbar-width:none; }
+  .strip::-webkit-scrollbar{ display:none; }
+  .chip{ flex-shrink:0; width:40px; height:40px; border-radius:12px; border:none; background:var(--card); font-family:"Fredoka",sans-serif;
+    font-weight:700; font-size:15px; color:var(--ink-soft); box-shadow:0 2px 6px rgba(0,0,0,0.08); cursor:pointer; position:relative; opacity:0.75; }
+  .chip:nth-child(5n+1){ background:linear-gradient(160deg,#FFE29A,#FFC93C); color:#7A4A00; }
+  .chip:nth-child(5n+2){ background:linear-gradient(160deg,#FFB0C4,#FF5D8F); color:#7A0030; }
+  .chip:nth-child(5n+3){ background:linear-gradient(160deg,#8FE0FF,#2EC4F1); color:#00415C; }
+  .chip:nth-child(5n+4){ background:linear-gradient(160deg,#B4F0D2,#2ED191); color:#004A2E; }
+  .chip:nth-child(5n+5){ background:linear-gradient(160deg,#D9C4FF,#9B6BFF); color:#3B0A7A; }
+  .chip.done{ opacity:1; }
+  .chip.done::after{ content:"★"; position:absolute; top:-5px; left:-5px; font-size:12px; color:#fff; background:var(--coral); border-radius:50%; width:16px; height:16px; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 3px rgba(0,0,0,0.2); }
+  .chip.current{ opacity:1; outline:3px solid var(--ink); outline-offset:2px; transform:scale(1.05); }
 
-<Collapsible summary="Benefits of using the default template">
+  .tip{ text-align:center; font-size:12px; color:var(--ink-soft); line-height:1.6; }
 
-- Creates a new React Native project with `expo` package installed
-- Includes recommended tools such as Expo CLI
-- Includes a tab navigator from Expo Router to provide a basic navigation system
-- Automatically configured to run a project on multiple platforms: Android, iOS, and web
-- TypeScript configured by default
+  .gift-btn{ width:38px; height:38px; border-radius:50%; border:none; background:linear-gradient(135deg,#FFD37A,#FF9A3D);
+    font-size:18px; cursor:pointer; box-shadow:0 3px 8px rgba(255,154,61,0.35); display:flex; align-items:center; justify-content:center; }
 
-</Collapsible>
+  .modal-overlay{ position:fixed; inset:0; background:rgba(20,15,35,0.55); display:flex; align-items:center; justify-content:center;
+    z-index:100; opacity:0; pointer-events:none; transition:opacity .2s ease; padding:16px; }
+  .modal-overlay.show{ opacity:1; pointer-events:auto; }
+  .modal-box{ background:var(--card); border-radius:20px; padding:20px; max-width:320px; width:100%; text-align:center;
+    box-shadow:0 14px 40px rgba(0,0,0,0.3); transform:scale(0.9); transition:transform .2s ease; }
+  .modal-overlay.show .modal-box{ transform:scale(1); }
+  .quiz-title{ font-family:"Fredoka",sans-serif; font-weight:700; font-size:16px; margin-bottom:8px; color:var(--purple); }
+  .quiz-question{ font-family:"Fredoka",sans-serif; font-weight:600; font-size:15px; margin-bottom:16px; color:var(--ink); }
+  .quiz-question b{ color:var(--coral); font-size:18px; }
+  .quiz-options{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .quiz-opt{ width:64px; height:64px; border-radius:16px; border:none; font-family:"Fredoka",sans-serif; font-weight:700; font-size:24px;
+    cursor:pointer; background:linear-gradient(135deg,#8FE0FF,#2EC4F1); color:#00415C; box-shadow:0 3px 8px rgba(0,0,0,0.15); touch-action:manipulation; }
+  .quiz-opt.wrong{ background:linear-gradient(135deg,#FFB0C4,#FF5D8F); opacity:0.55; }
+  .quiz-opt.correct{ background:linear-gradient(135deg,#B4F0D2,#2ED191); }
+  .quiz-opt:disabled{ cursor:default; }
+  .quiz-feedback{ margin-top:12px; font-family:"Fredoka",sans-serif; font-weight:700; font-size:14px; min-height:18px; color:var(--ink); }
+  .rewards-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:6px 0 16px; }
+  .reward-chip{ background:var(--bg); border-radius:14px; padding:10px 4px; display:flex; flex-direction:column; align-items:center; gap:4px; opacity:0.55; }
+  .reward-chip.unlocked{ opacity:1; background:linear-gradient(160deg,#FFF3C4,#FFE29A); box-shadow:0 2px 8px rgba(255,180,50,0.3); }
+  .reward-chip .remoji{ font-size:26px; }
+  .reward-chip .rname{ font-family:"Fredoka",sans-serif; font-weight:600; font-size:10.5px; color:var(--ink-soft); text-align:center; }
+  .modal-close{ border:none; background:linear-gradient(135deg,var(--blue),var(--purple)); color:#fff; font-family:"Fredoka",sans-serif;
+    font-weight:600; font-size:14px; padding:10px 22px; border-radius:12px; cursor:pointer; touch-action:manipulation; }
 
-</Step>
+  button{ touch-action:manipulation; -webkit-touch-callout:none; }
+  canvas{ -webkit-touch-callout:none; }
+  .app{ -webkit-user-select:none; user-select:none; }
 
-<Step label="2">
+  .mascot-bar{ display:flex; align-items:center; gap:10px; background:var(--card); border-radius:16px; padding:8px 12px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.06); }
+  .mascot-face{ font-size:30px; flex-shrink:0; transition:transform .15s ease; }
+  .mascot-face.bounce{ animation: mascotBounce 0.5s ease-in-out infinite; }
+  @keyframes mascotBounce{ 0%,100%{ transform:translateY(0) rotate(0deg); } 50%{ transform:translateY(-5px) rotate(-6deg); } }
+  .mascot-msg{ font-family:"Fredoka",sans-serif; font-weight:600; font-size:12.5px; color:var(--ink-soft); flex:1; }
+  .mascot-msg b{ color:var(--purple); }
+  .who-btn{ border:none; background:none; font-size:16px; cursor:pointer; opacity:0.6; flex-shrink:0; }
 
-## Download assets
+  .name-input-row{ display:flex; gap:8px; margin:10px 0 4px; }
+  .name-input-row input{ flex:1; border:2px solid #FFE0A8; border-radius:12px; padding:9px 12px; font-family:"Tajawal",sans-serif;
+    font-size:14px; text-align:center; outline:none; }
+  .name-input-row button{ border:none; background:linear-gradient(135deg,var(--green),var(--blue)); color:#fff; border-radius:12px;
+    padding:9px 16px; font-family:"Fredoka",sans-serif; font-weight:600; font-size:13px; cursor:pointer; }
+  .credit-line{ font-size:11px; color:var(--ink-soft); margin-top:10px; }
+  .song-btn{ background:linear-gradient(135deg,#FFD37A,var(--purple)); color:#fff; border:none; border-radius:14px; padding:10px 14px;
+    font-family:"Fredoka",sans-serif; font-weight:600; font-size:13px; cursor:pointer; width:100%; box-shadow:0 3px 8px rgba(155,107,255,0.3); }
+</style>
+</head>
+<body>
+<div class="app">
 
-<BoxLink
-  title="Download assets archive"
-  Icon={Download03Icon}
-  description="We'll be using these assets throughout this tutorial."
-  href="/static/images/tutorial/sticker-smash-assets.zip"
-/>
+  <div class="top">
+    <div class="brand"><h1>حروفي الصغيرة</h1><p id="brandSub">نتعلم رسم كل حرف بكلمات إنجليزية بسيطة</p></div>
+    <div style="display:flex; gap:6px; align-items:center;">
+      <button class="who-btn" id="whoBtn" title="مين صمم البرنامج؟">ℹ️</button>
+      <button class="gift-btn" id="giftBtn" title="جوائزي">🎁</button>
+      <div class="stars">⭐ <span id="starCount">0</span></div>
+    </div>
+  </div>
 
-After downloading the archive:
+  <div class="mascot-bar">
+    <div class="mascot-face" id="mascotFace">🦉</div>
+    <div class="mascot-msg" id="mascotMsg">أهلاً بيك! أنا <b>هوهو</b> البومة، هساعدك تتعلم كل حرف 🌟</div>
+  </div>
 
-1. Unzip the archive and replace the default assets in the **your-project-name/assets/images** directory.
-2. Open the project directory in a code editor or IDE.
+  <div class="modes">
+    <button id="modeUpper" class="active">حرف كبير A</button>
+    <button id="modeLower">حرف صغير a</button>
+  </div>
 
-</Step>
+  <div class="glossary">
+    <div class="gchip">↗️ <b>Slash</b></div>
+    <div class="gchip">➖ <b>Line</b></div>
+    <div class="gchip">⭕ <b>Circle</b></div>
+    <div class="gchip">◐ <b>Half circle</b></div>
+    <div class="gchip">〰️ <b>Curve</b></div>
+    <div class="gchip">↘ <b>Tail</b></div>
+    <div class="gchip">• <b>Dot</b></div>
+  </div>
 
-<Step label="3">
+  <div class="card">
+    <div class="letter-name">حرف <b id="letterWordEn">A</b> — <span id="letterExample">مثل Apple 🍎</span></div>
 
-## Run reset-project script
+    <div class="canvas-wrap" id="canvasWrap">
+      <canvas id="guideCanvas"></canvas>
+      <canvas id="drawCanvas"></canvas>
+      <canvas id="demoCanvas"></canvas>
+      <div class="say-bubble" id="sayBubble">Slash!</div>
+      <div class="demo-toast" id="demoToast">Now you try! 😊</div>
+      <div class="celebrate" id="celebrate"><span class="emoji">🎉</span><span id="celebrateMsg">أحسنت!</span></div>
+    </div>
 
-In this tutorial, we'll build our app from scratch and understand the fundamentals of adding a file-based navigation. Let's run the `reset-project` script to remove the boilerplate code:
+    <div class="row-buttons">
+      <button class="btn-demo" id="demoBtn">▶ Watch &amp; Listen</button>
+      <button class="btn-clear" id="clearBtn">↺ إعادة</button>
+      <button class="btn-hear" id="hearBtn">🔊 اسمع الحرف</button>
+    </div>
 
-<Terminal
-  cmd={{
-    npm: ['$ npm run reset-project'],
-    yarn: ['$ yarn run reset-project'],
-    pnpm: ['$ pnpm run reset-project'],
-    bun: ['$ bun run reset-project'],
-  }}
-/>
+    <div class="steps" id="stepsList"></div>
+  </div>
 
-After running the above command, there are two files (**index.tsx** and **\_layout.tsx**) left inside the **src/app** directory. The previous files from the **src** directory (including **components**, **constants**, and **hooks**) are moved inside the **example** directory by the script. We'll create our own directories and component files as we go along.
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn">◀</button>
+    <button class="big-next" id="nextBtn">الحرف التالي ▶</button>
+  </div>
 
-<Collapsible summary={<>What does the <CODE>reset-project</CODE> script do?</>}>
+  <div>
+    <div class="strip-label">اختر حرفًا</div>
+    <div class="strip" id="strip"></div>
+  </div>
 
-`reset-project` script resets the **src/app** directory structure in a project and moves the previous boilerplate files from the project's **src** directory to another sub-directory called **example**. We can delete it since it is not part of our main app's structure.
+  <button class="song-btn" id="songBtn">🎵 اسمعوا أغنية الحروف ABC Song</button>
 
-</Collapsible>
+  <div class="tip">💡 اضغطي "Watch & Listen" ليشوف طفلك القلم يرسم الحرف ويسمع الكلمة الإنجليزية لكل خطوة (Slash, Line, Circle...)، وبعدها خليه يجرب بنفسه بنفس الترتيب.
 
-</Step>
+</div>
 
-<Step label="4">
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box" id="modalBox"></div>
+  </div>
 
-## Run the app on mobile and web
+</div>
 
-In the project directory, run the following command to start the [development server](/more/glossary-of-terms/#development-server) from the terminal:
+<script>
+(function(){
+  // ---------- grid ----------
+  var T=14, M=56, B=98, D=118;
+  function line(x1,y1,x2,y2,n){ n=n||14; var pts=[]; for(var i=0;i<=n;i++){ var t=i/n; pts.push({x:x1+(x2-x1)*t, y:y1+(y2-y1)*t}); } return pts; }
+  function arc(cx,cy,rx,ry,a0,a1,n){ n=n||22; var pts=[]; for(var i=0;i<=n;i++){ var t=i/n; var a=(a0+(a1-a0)*t)*Math.PI/180; pts.push({x:cx+rx*Math.cos(a), y:cy+ry*Math.sin(a)}); } return pts; }
+  function cat(){ var out=[]; for(var i=0;i<arguments.length;i++){ out=out.concat(arguments[i]); } return out; }
+  function S(pts,desc,en){ return {type:'line', pts:pts, desc:desc, en:en}; }
+  function Dt(x,y,desc,en){ return {type:'dot', x:x, y:y, desc:desc, en:en||'Dot!'}; }
 
-<Terminal
-  cmd={{
-    npm: ['$ npx expo start'],
-    yarn: ['$ yarn expo start'],
-    pnpm: ['$ pnpm expo start'],
-    bun: ['$ bun expo start'],
-  }}
-/>
+  // ---------- letters: word/example data ----------
+  var order = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+  var info = {
+    A:{word:"Apple",emoji:"🍎"}, B:{word:"Ball",emoji:"⚽"}, C:{word:"Cat",emoji:"🐱"}, D:{word:"Dog",emoji:"🐶"},
+    E:{word:"Egg",emoji:"🥚"}, F:{word:"Fish",emoji:"🐟"}, G:{word:"Grapes",emoji:"🍇"}, H:{word:"Hat",emoji:"🎩"},
+    I:{word:"Ice cream",emoji:"🍦"}, J:{word:"Juice",emoji:"🧃"}, K:{word:"Kite",emoji:"🪁"}, L:{word:"Lion",emoji:"🦁"},
+    M:{word:"Moon",emoji:"🌙"}, N:{word:"Nest",emoji:"🪺"}, O:{word:"Orange",emoji:"🍊"}, P:{word:"Pencil",emoji:"✏️"},
+    Q:{word:"Queen",emoji:"👑"}, R:{word:"Rainbow",emoji:"🌈"}, S:{word:"Sun",emoji:"☀️"}, T:{word:"Tree",emoji:"🌳"},
+    U:{word:"Umbrella",emoji:"☂️"}, V:{word:"Van",emoji:"🚐"}, W:{word:"Watch",emoji:"⌚"}, X:{word:"Xylophone",emoji:"🎶"},
+    Y:{word:"Yo-yo",emoji:"🪀"}, Z:{word:"Zebra",emoji:"🦓"}
+  };
 
-After running the above command:
+  // ---------- stroke definitions (desc = Arabic explanation, en = simple English word spoken/shown) ----------
+  var strokes = {
+    A:{ upper:[ S(line(50,T,22,B),"من قمة الحرف، انزل مايل ناحية الشمال","Right slash!"),
+                S(line(50,T,78,B),"من نفس القمة، انزل مايل ناحية اليمين","Left slash!"),
+                S(line(32,66,68,66),"خط صغير يوصل بين الخطين في النص","Line, across!") ],
+        lower:[ S(arc(50,77,20,21,320,40),"نص دائرة زي حرف c الصغير","Half circle!"),
+                S(cat(line(70,58,70,88),line(70,88,76,97)),"خط نازل لحد السطر، وذيل صغير في الآخر (منزلش تحت السطر)","Line down, then a tail!") ] },
+    B:{ upper:[ S(line(30,T,30,B),"خط عمودي مستقيم من فوق لتحت","Line, down!"),
+                S(arc(30,35,20,21,270,450),"نص دائرة من أعلى الخط لحد النص","Half circle!"),
+                S(arc(30,77,22,21,270,450),"نص دائرة تانية من النص لتحت، أكبر شوية","Half circle!") ],
+        lower:[ S(line(28,T,28,B),"خط عمودي طويل فوق السطر لحد تحت","Line, down!"),
+                S(arc(46,77,18,21,270,630),"دايرة صغيرة تحت، ملزوقة في آخر الخط","Circle!") ] },
+    C:{ upper:[ S(arc(52,56,26,42,320,40),"ابدأ من فوق ناحية اليمين، لف لليسار، وارجع تحت ناحية اليمين","Half circle!") ],
+        lower:[ S(arc(50,77,20,21,320,40),"نفس شكل الـ C الكبيرة بس أصغر","Half circle!") ] },
+    D:{ upper:[ S(line(28,T,28,B),"خط عمودي من فوق لتحت","Line, down!"),
+                S(arc(28,56,30,42,270,450),"نص دائرة كبيرة من فوق الخط لتحت","Half circle!") ],
+        lower:[ S(arc(44,77,18,21,320,40),"نص دائرة زي حرف c","Half circle!"),
+                S(line(62,T,62,B),"خط عمودي طويل فوق السطر، ملزوق يمين الدائرة","Line, down!") ] },
+    E:{ upper:[ S(line(28,T,28,B),"خط عمودي من فوق لتحت","Line, down!"),
+                S(line(28,T,72,T),"خط أفقي فوق","Line, across!"),
+                S(line(28,56,64,56),"خط أفقي في النص، أقصر شوية","Line, across!"),
+                S(line(28,B,72,B),"خط أفقي تحت","Line, across!") ],
+        lower:[ S(cat(line(34,77,62,77),arc(50,77,20,21,0,320)),"خط أفقي صغير، وبعده دايرة تلف تحت وشمال وفوق","Curve!") ] },
+    F:{ upper:[ S(line(28,T,28,B),"خط عمودي من فوق لتحت","Line, down!"),
+                S(line(28,T,72,T),"خط أفقي فوق","Line, across!"),
+                S(line(28,56,64,56),"خط أفقي في النص، بدون خط تحت خالص","Line, across!") ],
+        lower:[ S(cat(line(46,T,46,20),arc(54,20,8,8,180,320)),"خط قصير فوق مع خطاف صغير يتجه لليمين","Curve!"),
+                S(line(46,T,46,B),"خط عمودي طويل من فوق لحد السطر","Line, down!"),
+                S(line(34,56,60,56),"خط أفقي صغير يقطعه في النص","Line, across!") ] },
+    G:{ upper:[ S(arc(52,56,26,42,320,50),"زي الـ C: من فوق يمين، لف شمال، ارجع تحت يمين","Half circle!"),
+                S(line(69,70,50,70),"خط صغير أفقي لجوه ناحية النص","Line, across!"),
+                S(line(50,70,50,86),"خط صغير نازل تحت","Line, down!") ],
+        lower:[ S(arc(50,77,20,21,320,40),"نص دائرة زي حرف c","Half circle!"),
+                S(cat(line(66,70,66,112),line(66,112,58,116),line(58,116,50,113)),"خط نازل تحت السطر، ولفة صغيرة في الآخر","Line down, then a tail!") ] },
+    H:{ upper:[ S(line(28,T,28,B),"خط عمودي شمال من فوق لتحت","Line, down!"),
+                S(line(72,T,72,B),"خط عمودي يمين من فوق لتحت","Line, down!"),
+                S(line(28,56,72,56),"خط أفقي يوصل بينهم في النص","Line, across!") ],
+        lower:[ S(line(28,T,28,B),"خط عمودي طويل فوق السطر لحد تحت","Line, down!"),
+                S(cat(arc(28,66,18,10,270,360),line(46,66,46,B)),"نص دائرة صغيرة تتجه يمين، وبعدها خط نازل","Curve, then line down!") ] },
+    I:{ upper:[ S(line(50,T,50,B),"خط واحد بسيط من فوق لتحت في النص","Line, down!") ],
+        lower:[ S(line(50,56,50,B),"خط عمودي قصير على السطر","Line, down!"),
+                Dt(50,38,"نقطة صغيرة فوق الخط","Dot!") ] },
+    J:{ upper:[ S(cat(line(58,T,58,80),arc(46,80,12,14,0,140)),"خط عمودي ينزل ويتقوس زي الصنارة في الآخر","Line down, then a tail!") ],
+        lower:[ S(cat(line(54,56,54,108),line(54,108,46,114)),"خط نازل تحت السطر مع خطاف بسيط في الآخر","Line down, then a tail!"),
+                Dt(54,40,"نقطة صغيرة فوق الخط","Dot!") ] },
+    K:{ upper:[ S(line(28,T,28,B),"خط عمودي شمال","Line, down!"),
+                S(line(70,T,28,56),"خط مايل من فوق يمين لحد نص الخط","Slash, down!"),
+                S(line(28,56,70,B),"خط مايل من نص الخط لتحت يمين","Slash, down!") ],
+        lower:[ S(line(28,T,28,B),"خط عمودي طويل فوق السطر","Line, down!"),
+                S(line(64,50,28,74),"خط مايل من فوق يمين لنص الخط تقريبًا","Slash, down!"),
+                S(line(28,74,64,B),"خط مايل من نص الخط لتحت يمين","Slash, down!") ] },
+    L:{ upper:[ S(line(30,T,30,B),"خط عمودي من فوق لتحت","Line, down!"),
+                S(line(30,B,72,B),"خط أفقي تحت","Line, across!") ],
+        lower:[ S(line(46,T,46,B),"خط عمودي طويل بس، من فوق السطر لحد السطر","Line, down!") ] },
+    M:{ upper:[ S(line(22,T,22,B),"خط عمودي شمال من فوق لتحت","Line, down!"),
+                S(line(22,T,50,60),"خط مايل نازل من أعلى الخط لنقطة في النص","Slash, down!"),
+                S(line(50,60,78,T),"خط مايل طالع من النص لفوق ناحية اليمين","Slash, up!"),
+                S(line(78,T,78,B),"خط عمودي يمين من فوق لتحت","Line, down!") ],
+        lower:[ S(line(24,56,24,B),"خط عمودي قصير على السطر","Line, down!"),
+                S(cat(arc(24,66,14,10,270,360),line(38,66,38,B)),"نص دائرة صغيرة، وبعدها خط نازل","Curve, then line down!"),
+                S(cat(arc(38,66,14,10,270,360),line(52,66,52,B)),"نفس الشكل تاني","Curve, then line down!") ] },
+    N:{ upper:[ S(line(26,T,26,B),"خط عمودي شمال من فوق لتحت","Line, down!"),
+                S(line(26,T,74,B),"خط مايل من أعلى الشمال لتحت اليمين","Slash, down!"),
+                S(line(74,B,74,T),"خط عمودي يمين، من تحت لفوق","Line, up!") ],
+        lower:[ S(line(28,56,28,B),"خط عمودي قصير على السطر","Line, down!"),
+                S(cat(arc(28,66,16,10,270,360),line(44,66,44,B)),"نص دائرة صغيرة تتجه يمين، وبعدها خط نازل","Curve, then line down!") ] },
+    O:{ upper:[ S(arc(50,56,26,42,270,630),"ابدأ من فوق ولف يمين لحد ما ترجع لنفس النقطة","Circle!") ],
+        lower:[ S(arc(50,77,20,21,270,630),"دايرة كاملة صغيرة جوه السطر","Circle!") ] },
+    P:{ upper:[ S(line(28,T,28,B),"خط عمودي من فوق لتحت","Line, down!"),
+                S(arc(28,35,22,21,270,450),"نص دائرة من فوق الخط لحد نص الخط","Half circle!") ],
+        lower:[ S(line(28,56,28,D),"خط عمودي من السطر نازل تحت السطر","Line, down!"),
+                S(arc(46,72,18,16,270,630),"دايرة صغيرة فوق، ملزوقة بالخط من الشمال","Circle!") ] },
+    Q:{ upper:[ S(arc(50,56,26,42,270,630),"دايرة كاملة زي الـ O بالظبط","Circle!"),
+                S(line(60,84,76,102),"خط صغير مايل يطلع بره الدايرة، زي ذيل","Tail!") ],
+        lower:[ S(arc(44,77,18,21,320,40),"نص دائرة زي حرف c","Half circle!"),
+                S(line(62,56,62,D),"خط عمودي نازل تحت السطر","Line, down!") ] },
+    R:{ upper:[ S(line(28,T,28,B),"خط عمودي من فوق لتحت","Line, down!"),
+                S(arc(28,35,22,21,270,450),"نص دائرة من فوق الخط لحد النص","Half circle!"),
+                S(line(28,56,72,B),"خط مايل من نص الخط لتحت ناحية اليمين","Slash, down!") ],
+        lower:[ S(line(30,56,30,B),"خط عمودي قصير على السطر","Line, down!"),
+                S(arc(30,64,10,8,270,0),"خطاف صغير من فوق الخط يتجه لليمين","Curve!") ] },
+    S:{ upper:[ S([{x:66,y:22},{x:56,y:16},{x:42,y:16},{x:32,y:22},{x:30,y:32},{x:34,y:42},{x:46,y:50},{x:58,y:58},{x:68,y:66},{x:70,y:76},{x:66,y:86},{x:54,y:92},{x:40,y:92},{x:30,y:86}],"خط واحد يشبه الثعبان: فوق يمين، لف شمال، نص، لف يمين تحت","Curve!") ],
+        lower:[ S([{x:64,y:64},{x:56,y:58},{x:46,y:58},{x:38,y:64},{x:38,y:70},{x:44,y:76},{x:54,y:80},{x:62,y:86},{x:62,y:92},{x:54,y:98},{x:44,y:98},{x:36,y:92}],"نفس شكل الـ S الكبيرة بس أصغر","Curve!") ] },
+    T:{ upper:[ S(line(28,T,72,T),"خط أفقي فوق","Line, across!"),
+                S(line(50,T,50,B),"خط عمودي من نص الخط الأفقي لتحت","Line, down!") ],
+        lower:[ S(line(46,26,46,92),"خط عمودي متوسط الطول","Line, down!"),
+                S(line(32,56,60,56),"خط أفقي صغير يقطعه في النص","Line, across!") ] },
+    U:{ upper:[ S(line(26,T,26,74),"خط عمودي شمال من فوق لتحت شوية","Line, down!"),
+                S(arc(50,74,24,24,180,0),"نص دائرة تحت بتوصل من الشمال لليمين","Half circle!"),
+                S(line(74,74,74,T),"خط عمودي يمين من تحت لفوق","Line, up!") ],
+        lower:[ S(line(30,56,30,84),"خط عمودي قصير نازل","Line, down!"),
+                S(arc(44,84,14,14,180,0),"منحنى تحت زي شكل حرف u","Half circle!"),
+                S(line(58,84,58,56),"خط عمودي طالع لفوق تاني","Line, up!") ] },
+    V:{ upper:[ S(line(26,T,50,B),"خط مايل من فوق شمال نازل لتحت النص","Slash, down!"),
+                S(line(50,B,74,T),"خط مايل من تحت النص طالع لفوق يمين","Slash, up!") ],
+        lower:[ S(line(28,56,50,B),"خط مايل من فوق شمال لتحت","Slash, down!"),
+                S(line(50,B,72,56),"خط مايل من تحت طالع لفوق يمين","Slash, up!") ] },
+    W:{ upper:[ S(line(20,T,34,B),"خط مايل نازل الأول","Slash, down!"),
+                S(line(34,B,50,50),"خط مايل طالع","Slash, up!"),
+                S(line(50,50,66,B),"خط مايل نازل تاني","Slash, down!"),
+                S(line(66,B,80,T),"خط مايل طالع أخير","Slash, up!") ],
+        lower:[ S(line(24,56,36,B),"خط مايل نازل الأول","Slash, down!"),
+                S(line(36,B,50,64),"خط مايل طالع","Slash, up!"),
+                S(line(50,64,64,B),"خط مايل نازل تاني","Slash, down!"),
+                S(line(64,B,76,56),"خط مايل طالع أخير","Slash, up!") ] },
+    X:{ upper:[ S(line(26,T,74,B),"خط مايل من فوق شمال لتحت يمين","Slash, down!"),
+                S(line(74,T,26,B),"خط مايل من فوق يمين لتحت شمال","Slash, down!") ],
+        lower:[ S(line(30,56,66,B),"خط مايل من فوق شمال لتحت يمين","Slash, down!"),
+                S(line(66,56,30,B),"خط مايل من فوق يمين لتحت شمال","Slash, down!") ] },
+    Y:{ upper:[ S(line(26,T,50,56),"خط مايل من فوق شمال لنقطة في النص","Slash, down!"),
+                S(line(74,T,50,56),"خط مايل من فوق يمين، يقابل الأول في نفس النقطة","Slash, down!"),
+                S(line(50,56,50,B),"خط عمودي من نقطة التقاء الخطين لتحت","Line, down!") ],
+        lower:[ S(line(28,56,50,84),"خط مايل من فوق شمال لنقطة في النص","Slash, down!"),
+                S(line(72,56,38,112),"خط مايل من فوق يمين، يعدي من نفس النقطة، وينزل تحت السطر","Slash down, with a tail!") ] },
+    Z:{ upper:[ S(line(26,T,74,T),"خط أفقي فوق","Line, across!"),
+                S(line(74,T,26,B),"خط مايل من فوق يمين لتحت شمال","Slash, down!"),
+                S(line(26,B,74,B),"خط أفقي تحت","Line, across!") ],
+        lower:[ S(line(30,56,66,56),"خط أفقي فوق","Line, across!"),
+                S(line(66,56,30,B),"خط مايل من فوق يمين لتحت شمال","Slash, down!"),
+                S(line(30,B,66,B),"خط أفقي تحت","Line, across!") ] }
+  };
 
-1. The development server will start, and you'll see a QR code inside the terminal window.
-2. Scan that QR code to open the app on the device. On Android, use the Expo Go > **Scan QR code** option. On iOS, use the default camera app.
-3. To run the web app, press <kbd>W</kbd> in the terminal. It will open the web app in the default web browser.
+  // ---------- state ----------
+  var idx = 0, isUpper = true, stars = 0;
+  var doneSet = {}, currentStroke = 0, strokeDone = [], masks = [];
+  var isDemoPlaying = false, demoRAF = null;
+  var unlockedGifts = [];
+  var childName = '';
 
-> **info** On a physical iOS device, Expo Go opens your project only when Expo CLI and Expo Go are signed in to the same Expo account. Run `npx expo login` on your computer, then sign in to Expo Go with the same account.
+  var milestones = [
+    {at:3,  emoji:'🥉', name:'ميدالية برونزية'},
+    {at:6,  emoji:'🥈', name:'ميدالية فضية'},
+    {at:10, emoji:'🥇', name:'ميدالية ذهبية'},
+    {at:16, emoji:'🏆', name:'كأس البطل'},
+    {at:22, emoji:'🦄', name:'يونيكورن'},
+    {at:30, emoji:'🚀', name:'صاروخ النجوم'},
+    {at:40, emoji:'👑', name:'تاج الأبطال'},
+    {at:52, emoji:'🎓', name:'خريج الحروف'}
+  ];
 
-Once it is running on all platforms, the app should look like this:
+  var STORAGE_KEY = 'huroofy_progress_v1';
+  function loadProgress(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){
+        var data = JSON.parse(raw);
+        if(typeof data.stars === 'number') stars = data.stars;
+        if(data.doneSet) doneSet = data.doneSet;
+        if(Array.isArray(data.gifts)) unlockedGifts = data.gifts;
+        if(typeof data.name === 'string') childName = data.name;
+      }
+    }catch(e){}
+  }
+  function saveProgress(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify({stars:stars, doneSet:doneSet, gifts:unlockedGifts, name:childName})); }catch(e){}
+  }
+  function shuffleArr(arr){
+    for(var i=arr.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=arr[i]; arr[i]=arr[j]; arr[j]=t; }
+    return arr;
+  }
 
-<ContentSpotlight
-  alt="App running on all platforms"
-  src="/static/images/tutorial/01-app-running-on-all-platforms.webp"
-  className="max-w-[720px]"
-/>
+  var guideCanvas=document.getElementById('guideCanvas'), drawCanvas=document.getElementById('drawCanvas'), demoCanvas=document.getElementById('demoCanvas');
+  var gctx=guideCanvas.getContext('2d'), dctx=drawCanvas.getContext('2d'), mctx=demoCanvas.getContext('2d');
+  var wrap=document.getElementById('canvasWrap');
+  var celebrate=document.getElementById('celebrate'), celebrateMsg=document.getElementById('celebrateMsg');
+  var demoToast=document.getElementById('demoToast'), sayBubble=document.getElementById('sayBubble');
+  var stepsList=document.getElementById('stepsList'), strip=document.getElementById('strip');
+  var starCountEl=document.getElementById('starCount'), letterWordEn=document.getElementById('letterWordEn'), letterExample=document.getElementById('letterExample');
+  var demoBtn=document.getElementById('demoBtn');
+  var giftBtn=document.getElementById('giftBtn'), modalOverlay=document.getElementById('modalOverlay'), modalBox=document.getElementById('modalBox');
+  var whoBtn=document.getElementById('whoBtn'), songBtn=document.getElementById('songBtn');
+  var mascotFace=document.getElementById('mascotFace'), mascotMsg=document.getElementById('mascotMsg'), brandSub=document.getElementById('brandSub');
 
-</Step>
+  var praise = ["أحسنت! 🎉","رائع جدًا! 🌟","ممتاز يا بطل! 💪","شاطر! 👏","عمل جميل! 🥳"];
 
-<Step label="5">
+  function currentLetter(){ return order[idx]; }
+  function currentStrokes(){ return strokes[currentLetter()][isUpper?'upper':'lower']; }
+  function currentGlyph(){ var L=order[idx]; return isUpper? L : L.toLowerCase(); }
 
-## Edit the index screen
+  function buildStrip(){
+    strip.innerHTML='';
+    order.forEach(function(L,i){
+      var b=document.createElement('button'); b.className='chip'; b.textContent=L;
+      b.addEventListener('click', function(){ goTo(i); });
+      strip.appendChild(b);
+    });
+    refreshStrip();
+  }
+  function refreshStrip(){
+    var chips=strip.children;
+    for(var i=0;i<chips.length;i++){
+      chips[i].classList.toggle('current', i===idx);
+      chips[i].classList.toggle('done', !!(doneSet[i+'U'] && doneSet[i+'L']));
+    }
+    var cur=chips[idx]; if(cur&&cur.scrollIntoView) cur.scrollIntoView({inline:'center',block:'nearest'});
+  }
 
-The **src/app/index.tsx** file defines the text displayed on the app's screen. It is the entry point of our app and executes when the development server starts. It uses core React Native components such as `<View>` and `<Text>` to display background and text.
+  var GW=100, GH=125;
+  function sizeCanvases(){
+    var rect = wrap.getBoundingClientRect();
+    if(rect.height < 20 && rect.width > 0){
+      wrap.style.height = Math.round(rect.width * (GH/GW)) + 'px';
+      rect = wrap.getBoundingClientRect();
+    }
+    var dpr = window.devicePixelRatio || 1;
+    [guideCanvas, drawCanvas, demoCanvas].forEach(function(c){
+      c.width = rect.width*dpr; c.height = rect.height*dpr;
+      c.getContext('2d').setTransform(dpr,0,0,dpr,0,0);
+    });
+    buildMasksAndRender();
+  }
+  function toPx(pt, rect){ return { x: pt.x/GW*rect.width, y: pt.y/GH*rect.height }; }
 
-Styles applied to these components use JavaScript objects rather than CSS, which is used on web. However, a lot of the properties will look familiar if you've previously used CSS on web. Most React Native components accept a `style` prop that accepts a JavaScript object as its value. For more details, see [Styling in React Native](https://reactnative.dev/docs/style).
+  function buildMasksAndRender(){
+    var rect = wrap.getBoundingClientRect();
+    var dpr = window.devicePixelRatio || 1;
+    var strokesArr = currentStrokes();
+    masks = strokesArr.map(function(st){
+      var mc = document.createElement('canvas');
+      mc.width = rect.width*dpr; mc.height = rect.height*dpr;
+      var mctx2 = mc.getContext('2d'); mctx2.setTransform(dpr,0,0,dpr,0,0);
+      mctx2.lineCap='round'; mctx2.lineJoin='round'; mctx2.fillStyle='#000'; mctx2.strokeStyle='#000';
+      if(st.type==='dot'){
+        var p = toPx({x:st.x,y:st.y}, rect);
+        mctx2.beginPath(); mctx2.arc(p.x,p.y, rect.width*0.045, 0, Math.PI*2); mctx2.fill();
+      } else {
+        mctx2.lineWidth = rect.width*0.10;
+        mctx2.beginPath();
+        st.pts.forEach(function(pt,i){ var p=toPx(pt,rect); if(i===0) mctx2.moveTo(p.x,p.y); else mctx2.lineTo(p.x,p.y); });
+        mctx2.stroke();
+      }
+      return {canvas:mc, ctx:mctx2, dpr:dpr};
+    });
+    strokeDone = strokesArr.map(function(){ return false; });
+    currentStroke = 0;
+    renderGuide();
+    renderSteps();
+  }
 
-Let's modify **src/app/index.tsx** screen:
+  function ruledLines(ctx, rect){
+    var lines = [ {y:T,style:'dashed',strong:false}, {y:M,style:'dashed',strong:false}, {y:B,style:'solid',strong:true}, {y:D,style:'dashed',strong:false} ];
+    var styles = getComputedStyle(document.documentElement);
+    lines.forEach(function(l){
+      var y = l.y/GH*rect.height;
+      ctx.beginPath();
+      ctx.strokeStyle = l.strong ? styles.getPropertyValue('--line-strong').trim() : styles.getPropertyValue('--guide').trim();
+      ctx.lineWidth = l.strong ? 2 : 1.3;
+      ctx.setLineDash(l.style==='dashed' ? [6,5] : []);
+      ctx.moveTo(0,y); ctx.lineTo(rect.width,y); ctx.stroke();
+    });
+    ctx.setLineDash([]);
+  }
+  function drawArrowHead(ctx, p1, p2, color){
+    var ang = Math.atan2(p2.y-p1.y, p2.x-p1.x); var size=9;
+    ctx.fillStyle = color; ctx.beginPath(); ctx.moveTo(p2.x, p2.y);
+    ctx.lineTo(p2.x - size*Math.cos(ang-0.4), p2.y - size*Math.sin(ang-0.4));
+    ctx.lineTo(p2.x - size*Math.cos(ang+0.4), p2.y - size*Math.sin(ang+0.4));
+    ctx.closePath(); ctx.fill();
+  }
 
-1. Import `StyleSheet` from `react-native` and create a `styles` object to define our custom styles.
-2. Add a `styles.container.backgroundColor` property to `<View>` with the value of `#25292e`. This changes the background color.
-3. Replace the default value of `<Text>` with "Home screen".
-4. Add a `styles.text.color` property to `<Text>` with the value of `#fff` (white) to change the text color.
+  function renderGuide(){
+    var rect = wrap.getBoundingClientRect();
+    gctx.clearRect(0,0,rect.width,rect.height);
+    ruledLines(gctx, rect);
+    var strokesArr = currentStrokes();
+    var styles = getComputedStyle(document.documentElement);
+    var futureColor = styles.getPropertyValue('--future').trim();
+    var activeColor = styles.getPropertyValue('--blue').trim();
+    var doneColor = styles.getPropertyValue('--green').trim();
 
-{/* prettier-ignore */}
-```tsx src/app/index.tsx|collapseHeight=340
-import { Text, View, /* @tutinfo Import `StyleSheet` to define styles. */ StyleSheet/* @end */ } from 'react-native';
+    strokesArr.forEach(function(st, i){
+      var state = strokeDone[i] ? 'done' : (i===currentStroke ? 'active' : 'future');
+      var color = state==='done' ? doneColor : state==='active' ? activeColor : futureColor;
 
-export default function Index() {
-  return (
-    <View style={styles.container}>
-      /* @tutinfo This used to say "Edit src/app/index.tsx to edit this screen". Now it says, "Home screen". */
-      <Text style={styles.text}>Home screen</Text>
-      /* @end */
-    </View>
-  );
-}
+      if(st.type==='dot'){
+        var p = toPx({x:st.x,y:st.y}, rect);
+        gctx.beginPath(); gctx.fillStyle=color; gctx.globalAlpha = state==='future'?0.55:1;
+        gctx.arc(p.x,p.y, rect.width*0.035, 0, Math.PI*2); gctx.fill(); gctx.globalAlpha=1;
+      } else {
+        gctx.beginPath(); gctx.strokeStyle=color;
+        gctx.lineWidth = rect.width * (state==='active'?0.045:0.038);
+        gctx.lineCap='round'; gctx.lineJoin='round';
+        gctx.globalAlpha = state==='future'?0.55:(state==='done'?0.55:0.95);
+        gctx.setLineDash(state==='done'?[]:[rect.width*0.028, rect.width*0.022]);
+        st.pts.forEach(function(pt,j){ var p=toPx(pt,rect); if(j===0) gctx.moveTo(p.x,p.y); else gctx.lineTo(p.x,p.y); });
+        gctx.stroke(); gctx.setLineDash([]); gctx.globalAlpha=1;
+        if(state==='active' && st.pts.length>1){
+          drawArrowHead(gctx, toPx(st.pts[st.pts.length-2],rect), toPx(st.pts[st.pts.length-1],rect), color);
+        }
+      }
+      var startPt = st.type==='dot' ? {x:st.x, y:st.y} : st.pts[0];
+      var sp = toPx(startPt, rect);
+      gctx.beginPath(); gctx.fillStyle=color; gctx.globalAlpha = state==='future'?0.55:1;
+      gctx.arc(sp.x, sp.y, rect.width*0.038, 0, Math.PI*2); gctx.fill(); gctx.globalAlpha=1;
+      gctx.fillStyle='#fff'; gctx.font='700 '+Math.round(rect.width*0.045)+'px Fredoka, sans-serif';
+      gctx.textAlign='center'; gctx.textBaseline='middle'; gctx.fillText(String(i+1), sp.x, sp.y+1);
+      if(state==='active'){
+        var pulse = 1+0.25*Math.abs(Math.sin(Date.now()/280));
+        gctx.beginPath(); gctx.strokeStyle=color; gctx.globalAlpha=0.5; gctx.lineWidth=2;
+        gctx.arc(sp.x, sp.y, rect.width*0.055*pulse, 0, Math.PI*2); gctx.stroke(); gctx.globalAlpha=1;
+      }
+    });
+  }
+  var guideAnimId=null;
+  function loopGuide(){ renderGuide(); guideAnimId = requestAnimationFrame(loopGuide); }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    /* @tutinfo Add the value of `backgroundColor` property with `'#25292e'`.*/
-    backgroundColor: '#25292e',
-    /* @end */
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    color: '#fff',
-  },
-});
-```
+  function renderSteps(){
+    var strokesArr = currentStrokes();
+    stepsList.innerHTML='';
+    strokesArr.forEach(function(st,i){
+      var row=document.createElement('div');
+      row.className='step'+(strokeDone[i]?' done':(i===currentStroke?' active':''));
+      var num=document.createElement('div'); num.className='num'; num.textContent = strokeDone[i]?'✓':String(i+1);
+      var txt=document.createElement('div'); txt.className='txt';
+      var en=document.createElement('div'); en.className='en'; en.textContent=st.en;
+      var ar=document.createElement('div'); ar.className='ar'; ar.textContent=st.desc;
+      txt.appendChild(en); txt.appendChild(ar);
+      row.appendChild(num); row.appendChild(txt);
+      stepsList.appendChild(row);
+    });
+  }
 
-> React Native uses the same color format as the web. It supports hex triplets (this is what `#fff` is), `rgba`, `hsl`, and named colors, such as `red`, `green`, `blue`, `peru`, and `papayawhip`. For more information, see [Colors in React Native](https://reactnative.dev/docs/colors).
+  // ---------- drawing ----------
+  var drawing=false, lastX=0, lastY=0;
+  function getPos(e){ var rect=drawCanvas.getBoundingClientRect(); var t=(e.touches&&e.touches[0])?e.touches[0]:e; return {x:t.clientX-rect.left, y:t.clientY-rect.top}; }
+  function pointerDown(e){
+    if(isDemoPlaying) return;
+    e.preventDefault(); drawing=true;
+    var p=getPos(e); lastX=p.x; lastY=p.y;
+    var rWidth = drawCanvas.getBoundingClientRect().width;
+    dctx.fillStyle = inkColor();
+    dctx.beginPath();
+    dctx.arc(p.x, p.y, rWidth*0.0225, 0, Math.PI*2);
+    dctx.fill();
+  }
+  function pointerMove(e){
+    if(!drawing||isDemoPlaying) return; e.preventDefault();
+    var p=getPos(e);
+    dctx.strokeStyle=inkColor(); dctx.lineWidth=drawCanvas.getBoundingClientRect().width*0.045;
+    dctx.lineCap='round'; dctx.lineJoin='round';
+    dctx.beginPath(); dctx.moveTo(lastX,lastY); dctx.lineTo(p.x,p.y); dctx.stroke();
+    lastX=p.x; lastY=p.y;
+  }
+  function pointerUp(){ if(!drawing) return; drawing=false; checkCoverage(); }
+  function inkColor(){ var palette=['#3FA9F5','#FF6F61','#58C97E','#FFC93C','#9B6BFF']; return palette[idx%palette.length]; }
+  drawCanvas.addEventListener('mousedown', pointerDown);
+  drawCanvas.addEventListener('mousemove', pointerMove);
+  window.addEventListener('mouseup', pointerUp);
+  drawCanvas.addEventListener('touchstart', pointerDown, {passive:false});
+  drawCanvas.addEventListener('touchmove', pointerMove, {passive:false});
+  drawCanvas.addEventListener('touchend', pointerUp);
 
-Once you save your changes, they're sent and applied to the running apps connected to the development server:
+  function checkCoverage(){
+    if(currentStroke>=masks.length) return;
+    var m=masks[currentStroke]; var rect=wrap.getBoundingClientRect();
+    var w=Math.floor(rect.width*m.dpr), h=Math.floor(rect.height*m.dpr);
+    try{ var maskData=m.ctx.getImageData(0,0,w,h).data; var inkData=dctx.getImageData(0,0,w,h).data; }catch(err){ return; }
+    var maskPixels=0, covered=0, step=4;
+    for(var p=0;p<maskData.length;p+=4*step){
+      if(maskData[p+3]>40){ maskPixels++; if(inkData[p+3]>40) covered++; }
+    }
+    if(maskPixels===0) return;
+    var st = currentStrokes()[currentStroke];
+    var threshold = (st && st.type==='dot') ? 0.15 : 0.4;
+    if(covered/maskPixels > threshold){
+      strokeDone[currentStroke]=true; playTick(); currentStroke++; renderSteps();
+      if(currentStroke>=masks.length) markLetterDone();
+    }
+  }
+  var celebrateEmojis = ["🎉","🌈","🎊","⭐","🥳","🍭"];
+  function markLetterDone(){
+    var key=idx+(isUpper?'U':'L');
+    var firstTime = !doneSet[key];
+    if(firstTime){ doneSet[key]=true; stars++; starCountEl.textContent=stars; playChime(); saveProgress(); }
+    celebrateMsg.textContent = praise[Math.floor(Math.random()*praise.length)];
+    var emojiSpan = celebrate.querySelector('.emoji');
+    if(emojiSpan) emojiSpan.textContent = celebrateEmojis[Math.floor(Math.random()*celebrateEmojis.length)];
+    celebrate.classList.add('show'); refreshStrip();
+    setTimeout(function(){
+      celebrate.classList.remove('show');
+      if(firstTime){
+        checkMilestones(function(){ setTimeout(showQuiz, 250); });
+      }
+    }, 1400);
+  }
 
-<ContentSpotlight
-  alt="App with updated text and background color"
-  src="/static/images/tutorial/02-index-screen-changes.webp"
-  className="max-w-[720px]"
-/>
+  // ---------- modal / rewards / quiz ----------
+  function openModal(html){ modalBox.innerHTML = html; modalOverlay.classList.add('show'); }
+  function closeModal(){ modalOverlay.classList.remove('show'); }
+  modalOverlay.addEventListener('click', function(e){ if(e.target===modalOverlay) closeModal(); });
 
-<Collapsible summary="What is the blue gear icon?">
+  function checkMilestones(done){
+    var pending = milestones.filter(function(m){ return stars>=m.at && unlockedGifts.indexOf(m.at)===-1; });
+    function next(){
+      if(!pending.length){ saveProgress(); if(done) done(); return; }
+      var m = pending.shift();
+      unlockedGifts.push(m.at);
+      openModal(
+        '<div class="quiz-title">🎁 هدية جديدة!</div>'+
+        '<div style="font-size:48px; margin:8px 0;">'+m.emoji+'</div>'+
+        '<div class="quiz-question">فتحت <b>'+m.name+'</b>!</div>'+
+        '<button class="modal-close" id="giftOkBtn">تمام 😍</button>'
+      );
+      playChime();
+      document.getElementById('giftOkBtn').addEventListener('click', function(){ closeModal(); setTimeout(next, 200); });
+    }
+    next();
+  }
 
-The blue gear icon is the **Tools button** for Android and iOS platforms. It's a floating shortcut that opens the [Developer menu](/debugging/tools/#developer-menu), which provides access to debugging functions such as reloading the app and toggling Fast Refresh. It appears only while developing and is never included in a production build.
+  giftBtn.addEventListener('click', function(){
+    var html = '<div class="quiz-title">🎁 جوائزي</div><div class="rewards-grid">';
+    milestones.forEach(function(m){
+      var unlocked = unlockedGifts.indexOf(m.at)!==-1;
+      html += '<div class="reward-chip'+(unlocked?' unlocked':'')+'"><div class="remoji">'+(unlocked?m.emoji:'🔒')+'</div><div class="rname">'+(unlocked?m.name:m.at+' نجمة')+'</div></div>';
+    });
+    html += '</div><button class="modal-close" id="modalCloseBtn">إغلاق</button>';
+    openModal(html);
+    document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+  });
 
-The remaining screenshots in this tutorial will have it hidden. To hide it:
+  function updateGreeting(){
+    if(childName){
+      brandSub.textContent = 'أهلاً يا ' + childName + '! يلا نتعلم الحروف 🌟';
+      mascotMsg.innerHTML = 'أهلاً يا <b>' + childName + '</b>! أنا هوهو البومة، هساعدك تتعلم كل حرف 🌟';
+    } else {
+      brandSub.textContent = 'نتعلم رسم كل حرف بكلمات إنجليزية بسيطة';
+      mascotMsg.innerHTML = 'أهلاً بيك! أنا <b>هوهو</b> البومة، هساعدك تتعلم كل حرف 🌟';
+    }
+  }
 
-1. Open the Developer menu. Shake your device, or press <kbd>M</kbd> in the terminal running the development server if you're using an emulator, a simulator, or a device connected with USB.
-2. Find the **Tools button** option and toggle it off.
+  function openWelcomeModal(){
+    var html =
+      '<div class="quiz-title">🦉 أهلاً بيك!</div>'+
+      '<div class="quiz-question" style="margin-bottom:6px;">البرنامج ده اتصمم عشانك انت بالذات، عشان تتعلم رسم الحروف الإنجليزية وانت مبسوط 🌈</div>'+
+      '<div class="name-input-row"><input type="text" id="nameInput" placeholder="اكتب اسمك هنا" value="'+(childName||'')+'"><button id="nameSaveBtn">تمام</button></div>'+
+      '<div class="credit-line">🎨 تصميم: الأستاذة <b>هاجر نوار</b> — Mrs. Hager Nawar</div>'+
+      '<button class="modal-close" id="modalCloseBtn2" style="margin-top:14px;">يلا نبدأ 🚀</button>';
+    openModal(html);
+    document.getElementById('nameSaveBtn').addEventListener('click', function(){
+      var v = document.getElementById('nameInput').value.trim();
+      childName = v.slice(0,20);
+      saveProgress();
+      updateGreeting();
+    });
+    document.getElementById('modalCloseBtn2').addEventListener('click', closeModal);
+  }
+  whoBtn.addEventListener('click', openWelcomeModal);
 
-Hiding it doesn't disable the Developer menu. You can still open it the way described in Step 1 whenever you need it.
+  function showQuiz(){
+    var correct = currentGlyph();
+    var pool = order.filter(function(L){ return L!==currentLetter(); });
+    shuffleArr(pool);
+    var d1 = isUpper ? pool[0] : pool[0].toLowerCase();
+    var d2 = isUpper ? pool[1] : pool[1].toLowerCase();
+    var options = shuffleArr([correct, d1, d2]);
+    var qType = Math.random()<0.5 ? 'letter' : 'word';
+    var questionHtml;
+    if(qType==='letter'){
+      questionHtml = 'دوس على حرف <b>'+correct+'</b>';
+    } else {
+      var L = info[currentLetter()];
+      questionHtml = 'أي حرف بيبدأ بيه '+L.emoji+' <b>'+L.word+'</b>؟';
+    }
+    var optsHtml = '';
+    options.forEach(function(opt){ optsHtml += '<button class="quiz-opt" data-ok="'+(opt===correct?'1':'0')+'">'+opt+'</button>'; });
+    openModal(
+      '<div class="quiz-title">🎯 اختبار سريع!</div>'+
+      '<div class="quiz-question">'+questionHtml+'</div>'+
+      '<div class="quiz-options">'+optsHtml+'</div>'+
+      '<div class="quiz-feedback" id="quizFeedback"></div>'
+    );
+    var buttons = modalBox.querySelectorAll('.quiz-opt');
+    for(var i=0;i<buttons.length;i++){
+      (function(btn){
+        btn.addEventListener('click', function(){
+          if(btn.disabled) return;
+          if(btn.dataset.ok==='1'){
+            btn.classList.add('correct');
+            for(var k=0;k<buttons.length;k++) buttons[k].disabled=true;
+            document.getElementById('quizFeedback').textContent = 'صح! 🎉 +2 نقطة';
+            stars += 2; starCountEl.textContent = stars; playChime(); saveProgress();
+            setTimeout(function(){ closeModal(); checkMilestones(); }, 1100);
+          } else {
+            btn.classList.add('wrong'); btn.disabled = true;
+            document.getElementById('quizFeedback').textContent = 'حاول تاني! 💪';
+          }
+        });
+      })(buttons[i]);
+    }
+  }
+  function clearDrawing(){
+    var rect=wrap.getBoundingClientRect(); dctx.clearRect(0,0,rect.width,rect.height);
+    strokeDone = currentStrokes().map(function(){ return false; }); currentStroke=0; renderSteps();
+  }
 
-</Collapsible>
+  // ---------- sound ----------
+  var audioCtx=null;
+  function playChime(){
+    try{
+      audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+      [523.25,659.25,783.99].forEach(function(freq,i){
+        var osc=audioCtx.createOscillator(), gain=audioCtx.createGain();
+        osc.type='sine'; osc.frequency.value=freq;
+        gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+        var t0=audioCtx.currentTime+i*0.09;
+        gain.gain.linearRampToValueAtTime(0.18,t0+0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001,t0+0.35);
+        osc.connect(gain).connect(audioCtx.destination); osc.start(t0); osc.stop(t0+0.4);
+      });
+    }catch(e){}
+  }
+  function playTick(){
+    try{
+      audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+      var osc=audioCtx.createOscillator(), gain=audioCtx.createGain();
+      osc.type='sine'; osc.frequency.value=880;
+      gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.14, audioCtx.currentTime+0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime+0.15);
+      osc.connect(gain).connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime+0.16);
+    }catch(e){}
+  }
+  var preferredVoice = null;
+  function pickVoice(){
+    try{
+      var voices = window.speechSynthesis.getVoices();
+      if(!voices || !voices.length) return;
+      var priority = ['Google US English','Samantha','Microsoft Aria','Microsoft Jenny','Google UK English Female','Ava','Karen','Moira','Microsoft Zira','Alex'];
+      for(var i=0;i<priority.length;i++){
+        for(var j=0;j<voices.length;j++){
+          if(voices[j].name.indexOf(priority[i])!==-1){ preferredVoice=voices[j]; return; }
+        }
+      }
+      for(var k=0;k<voices.length;k++){
+        if(voices[k].lang && voices[k].lang.indexOf('en')===0){ preferredVoice=voices[k]; return; }
+      }
+      preferredVoice = voices[0];
+    }catch(e){}
+  }
+  if('speechSynthesis' in window){
+    pickVoice();
+    window.speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function speakEnglish(text, rate){
+    try{
+      if('speechSynthesis' in window){
+        var u=new SpeechSynthesisUtterance(text);
+        u.lang='en-US'; u.rate=rate||0.8; u.pitch=1.15;
+        if(preferredVoice) u.voice = preferredVoice;
+        window.speechSynthesis.speak(u);
+      }
+    }catch(e){}
+  }
+  function mascotSay(text, emoji, bounceMs){
+    mascotMsg.innerHTML = text;
+    if(emoji) mascotFace.textContent = emoji;
+    mascotFace.classList.add('bounce');
+    clearTimeout(mascotSay._t);
+    mascotSay._t = setTimeout(function(){
+      mascotFace.classList.remove('bounce');
+      mascotFace.textContent = '🦉';
+    }, bounceMs || 1600);
+  }
+  function speakLetter(){
+    var L = info[currentLetter()];
+    mascotSay('🔊 ده <b>صوت</b> الحرف ' + currentGlyph() + '!', '📢', 1800);
+    speakEnglish(currentGlyph()+". "+L.word, 0.85);
+  }
 
-</Step>
+  // ---------- demo animation with narration ----------
+  function playDemo(){
+    if(isDemoPlaying) return;
+    isDemoPlaying = true; demoBtn.disabled = true;
+    demoToast.classList.remove('show'); sayBubble.classList.remove('show');
+    mascotSay('✏️ شوف <b>حركة</b> رسم الحرف!', '👀', 2200);
+    try{ window.speechSynthesis.cancel(); }catch(e){}
+    var rect = wrap.getBoundingClientRect();
+    mctx.clearRect(0,0,rect.width,rect.height);
+    var strokesArr = currentStrokes();
+    var si = 0;
 
-## Summary
+    function showBubble(text){
+      sayBubble.textContent = text;
+      sayBubble.classList.add('show');
+    }
 
-<ProgressTracker name="GET_STARTED" currentChapterSlug="/tutorial/create-your-first-app" />
+    function animateStroke(){
+      if(si >= strokesArr.length){
+        isDemoPlaying=false; demoBtn.disabled=false; sayBubble.classList.remove('show');
+        demoToast.classList.add('show');
+        setTimeout(function(){ demoToast.classList.remove('show'); }, 1800);
+        return;
+      }
+      var st = strokesArr[si];
+      var color = ['#3FA9F5','#FF6F61','#58C97E','#FFC93C','#9B6BFF'][idx%5];
+      showBubble(st.en);
+      speakEnglish(st.en, 0.85);
+
+      if(st.type==='dot'){
+        var p = toPx({x:st.x,y:st.y}, rect);
+        mctx.beginPath(); mctx.fillStyle=color; mctx.arc(p.x,p.y,rect.width*0.05,0,Math.PI*2); mctx.fill();
+        si++; setTimeout(animateStroke, 700);
+        return;
+      }
+
+      var pts = st.pts, total = pts.length-1, startT=null, duration=1000;
+      function frame(ts){
+        if(startT===null) startT=ts;
+        var progress = Math.min(1, (ts-startT)/duration);
+        var floatIdx = progress*total, seg=Math.floor(floatIdx), segT=floatIdx-seg;
+        var a=pts[Math.min(seg,total)], b=pts[Math.min(seg+1,total)];
+        var cur = { x:a.x+(b.x-a.x)*segT, y:a.y+(b.y-a.y)*segT };
+
+        mctx.clearRect(0,0,rect.width,rect.height);
+        for(var k=0;k<si;k++){ drawFullStroke(mctx, strokesArr[k], rect, color, 0.5); }
+
+        mctx.beginPath(); mctx.strokeStyle=color; mctx.lineWidth=rect.width*0.045; mctx.lineCap='round'; mctx.lineJoin='round';
+        var upTo = Math.max(1, seg+1);
+        for(var j=0;j<=upTo && j<pts.length;j++){ var p=toPx(pts[j],rect); if(j===0) mctx.moveTo(p.x,p.y); else mctx.lineTo(p.x,p.y); }
+        var curPx = toPx(cur, rect); mctx.lineTo(curPx.x, curPx.y); mctx.stroke();
+
+        mctx.beginPath(); mctx.fillStyle='#fff'; mctx.arc(curPx.x, curPx.y, rect.width*0.035, 0, Math.PI*2); mctx.fill();
+        mctx.beginPath(); mctx.strokeStyle=color; mctx.lineWidth=3; mctx.arc(curPx.x, curPx.y, rect.width*0.035, 0, Math.PI*2); mctx.stroke();
+
+        if(progress<1){ demoRAF = requestAnimationFrame(frame); }
+        else { si++; setTimeout(animateStroke, 380); }
+      }
+      demoRAF = requestAnimationFrame(frame);
+    }
+    animateStroke();
+  }
+  function drawFullStroke(ctx, st, rect, color, alpha){
+    ctx.globalAlpha = alpha;
+    if(st.type==='dot'){
+      var p = toPx({x:st.x,y:st.y}, rect);
+      ctx.beginPath(); ctx.fillStyle=color; ctx.arc(p.x,p.y,rect.width*0.05,0,Math.PI*2); ctx.fill();
+    } else {
+      ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=rect.width*0.045; ctx.lineCap='round'; ctx.lineJoin='round';
+      st.pts.forEach(function(pt,i){ var p=toPx(pt,rect); if(i===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); });
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // ---------- letter info / nav ----------
+  function renderLetterInfo(){
+    var L = info[currentLetter()];
+    letterWordEn.textContent = currentGlyph();
+    letterExample.textContent = 'مثل ' + L.word + ' ' + L.emoji;
+  }
+  var isSongPlaying = false, songCancelled = false;
+  var scaleFreqs = [261.63,293.66,329.63,349.23,392.00,440.00,493.88,523.25];
+  function triangleIndex(i, period){
+    var cyc = 2*period; var p = i % cyc;
+    return p<=period ? p : cyc-p;
+  }
+  function playNote(freq, dur){
+    try{
+      audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+      var osc=audioCtx.createOscillator(), gain=audioCtx.createGain();
+      osc.type='triangle'; osc.frequency.value=freq;
+      gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.16, audioCtx.currentTime+0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime+dur);
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start(); osc.stop(audioCtx.currentTime+dur+0.05);
+    }catch(e){}
+  }
+  function highlightChipTemp(i){
+    var chips = strip.children;
+    for(var k=0;k<chips.length;k++){ chips[k].style.boxShadow=''; chips[k].style.transform=''; }
+    if(chips[i]){
+      chips[i].style.boxShadow='0 0 0 3px #fff, 0 0 0 6px var(--coral)';
+      chips[i].style.transform='scale(1.15)';
+      chips[i].scrollIntoView({inline:'center', block:'nearest'});
+    }
+  }
+  function clearChipHighlights(){
+    var chips = strip.children;
+    for(var k=0;k<chips.length;k++){ chips[k].style.boxShadow=''; chips[k].style.transform=''; }
+  }
+  function playSong(){
+    if(isSongPlaying) return;
+    isSongPlaying = true; songCancelled = false; songBtn.disabled = true;
+    try{ window.speechSynthesis.cancel(); }catch(e){}
+    mascotSay('🎵 يلا نغني الحروف مع بعض!', '🎶', 2000);
+    var i = 0;
+    function step(){
+      if(songCancelled || i>=order.length){
+        isSongPlaying = false; songBtn.disabled = false; clearChipHighlights();
+        if(!songCancelled) mascotSay('🥳 برافو! غنينا الحروف كلها!', '🥳', 2200);
+        return;
+      }
+      var L = order[i];
+      highlightChipTemp(i);
+      playNote(scaleFreqs[triangleIndex(i,7)], 0.35);
+      speakEnglish(L, 1.0);
+      i++;
+      setTimeout(step, 420);
+    }
+    step();
+  }
+  function stopSongIfPlaying(){
+    songCancelled = true; isSongPlaying = false; songBtn.disabled = false; clearChipHighlights();
+  }
+  songBtn.addEventListener('click', playSong);
+
+  function stopDemoIfPlaying(){
+    if(demoRAF) cancelAnimationFrame(demoRAF);
+    isDemoPlaying=false; demoBtn.disabled=false;
+    stopSongIfPlaying();
+    try{ window.speechSynthesis.cancel(); }catch(e){}
+    sayBubble.classList.remove('show'); demoToast.classList.remove('show');
+  }
+  function goTo(i){
+    idx = ((i % order.length)+order.length) % order.length;
+    stopDemoIfPlaying();
+    renderLetterInfo(); sizeCanvases();
+    var rect=wrap.getBoundingClientRect();
+    dctx.clearRect(0,0,rect.width,rect.height); mctx.clearRect(0,0,rect.width,rect.height);
+    refreshStrip(); updateNavButtons();
+  }
+  function updateNavButtons(){ document.getElementById('prevBtn').disabled = (idx===0); }
+
+  document.getElementById('prevBtn').addEventListener('click', function(){ goTo(idx-1); });
+  document.getElementById('nextBtn').addEventListener('click', function(){ goTo(idx+1); });
+  document.getElementById('clearBtn').addEventListener('click', function(){
+    var rect=wrap.getBoundingClientRect();
+    stopDemoIfPlaying();
+    mctx.clearRect(0,0,rect.width,rect.height);
+    clearDrawing();
+  });
+  document.getElementById('hearBtn').addEventListener('click', speakLetter);
+  demoBtn.addEventListener('click', playDemo);
+
+  var modeUpper=document.getElementById('modeUpper'), modeLower=document.getElementById('modeLower');
+  modeUpper.addEventListener('click', function(){
+    isUpper=true; modeUpper.classList.add('active'); modeLower.classList.remove('active');
+    stopDemoIfPlaying(); renderLetterInfo(); sizeCanvases();
+    var rect=wrap.getBoundingClientRect(); dctx.clearRect(0,0,rect.width,rect.height); mctx.clearRect(0,0,rect.width,rect.height);
+    refreshStrip();
+  });
+  modeLower.addEventListener('click', function(){
+    isUpper=false; modeLower.classList.add('active'); modeUpper.classList.remove('active');
+    stopDemoIfPlaying(); renderLetterInfo(); sizeCanvases();
+    var rect=wrap.getBoundingClientRect(); dctx.clearRect(0,0,rect.width,rect.height); mctx.clearRect(0,0,rect.width,rect.height);
+    refreshStrip();
+  });
+
+  window.addEventListener('resize', sizeCanvases);
+
+  loadProgress();
+  starCountEl.textContent = stars;
+  updateGreeting();
+  buildStrip();
+  renderLetterInfo();
+  requestAnimationFrame(function(){ sizeCanvases(); updateNavButtons(); loopGuide(); });
+  if(!childName){ setTimeout(openWelcomeModal, 500); }
+})();
+</script>
+</body>
+</html>
